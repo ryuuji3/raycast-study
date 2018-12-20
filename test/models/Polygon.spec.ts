@@ -30,3 +30,15 @@ test("find() should return true if point is inside polygon", () => {
     expect(polygon.has(new Point(2, 0))).toBeFalsy();
     expect(polygon.has(new Point(0, 0))).toBeFalsy(); // TODO: Also include points ON segments between points
 });
+
+test("find() should return true if point is inside square", () => {
+    const square = [
+        new Point(-2,-2),
+        new Point(-2, 2),
+        new Point( 2, 2),
+        new Point( 2,-2)
+    ]
+    const polygon = new Polygon(square);
+
+    expect(polygon.has(new Point(0,0))).toBeTruthy();
+})
