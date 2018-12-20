@@ -1,0 +1,26 @@
+{
+  "name": "raycast-algorithm",
+  "version": "1.0.0",
+  "description": "Study of raycast algorithm",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "run": "ts-node src/index.ts",
+    "test": "jest"
+  },
+  "keywords": [
+    "raycast",
+    "nodejs",
+    "point",
+    "coordinates"
+  ],
+  "author": "ryuuji3",
+  "license": "MIT",
+  "dependencies": {
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0"
+  }
+}
