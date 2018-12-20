@@ -9,7 +9,8 @@
     "strict": true,                           /* Enable all strict type-checking options. */
     "esModuleInterop": true,
     "experimentalDecorators": true,        /* Enables experimental support for ES7 decorators. */
-    "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */,
-    "exclude": ["node_modules", "build"]
-  }
+    "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "build"]
 }
