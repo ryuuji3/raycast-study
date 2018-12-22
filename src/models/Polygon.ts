@@ -59,7 +59,7 @@ export class Polygon {
             if (this.pointHasIntersection(point, side)) {
                 intersections++;
             }
-        })
+        });
 
         return intersections % 2 !== 0;
     }
