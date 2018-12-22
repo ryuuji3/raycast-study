@@ -22,7 +22,7 @@ test("should create sides (segments) from sorted points", () => {
     expect(polygon.sides).toStrictEqual(sides);
 });
 
-test("find() should return true if point is inside polygon", () => {
+test("find() should return true if point is inside triangle", () => {
     const points = [ new Point(0,0), new Point(1,5), new Point(-1, 5) ]; 
     const polygon = new Polygon(points);
 
@@ -41,4 +41,18 @@ test("find() should return true if point is inside square", () => {
     const polygon = new Polygon(square);
 
     expect(polygon.has(new Point(0,0))).toBeTruthy();
-})
+});
+
+test("find() should return true if point is inside polygon", () => {
+    const shape = [
+        new Point(-2,-3),
+        new Point(-2, 4),
+        new Point(-1, 5),
+        new Point( 2, 2),
+        new Point( 1,-1)
+    ]
+    const polygon = new Polygon(shape);
+
+    expect(polygon.has(new Point(0,0))).toBeTruthy();
+    expect(polygon.has(new Point(-3, -3))).toBeFalsy();
+});

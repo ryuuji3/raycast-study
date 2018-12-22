@@ -30,27 +30,32 @@ export class Polygon {
     }
 
     /**
-     * Return if the ray (starting at point) intersects segment between two points (A and B).
+     * Return if the ray (starting at point) intersects segment between two points (A and B) from the left.
      * 
-     * Idea comes from: https://github.com/soniakeys/raycast/blob/master/raycast.go
-     * 
-     * TODO: Figure out this algorithm
+     * Idea comes from: http://rosettacode.org/wiki/Ray-casting_algorithm#JavaScript
      * 
      * @param point
      * @param segment 
+     * @return true if ray intersects from left
      */
     protected pointHasIntersection(point: Point, segment: Segment): boolean {
         const { x, y } = point;
-        const { a, b, i, j} = segment;
-
-        return ((y > a.y) && (x < b.y)) // y is between a and b
-            && x < a.x + (i)*(y-a.y)/j // x falls within triangle created from a and b... I think?
+        const { a, b, theta } = segment;
+        
+        if (y < a.y || y > b.y || (x >= a.x && x >= b.x)) { // Outside range
+            return false;
+        } else if (x < a.x && x < b.x) { // Left of both A and B
+            return true;
+        } else { // create vector from AP and compare angles; if theta of AP is > than theta of AB then ray intersects segment
+            return Math.atan((y - a.y) / (x - a.x)) > theta;
+        }
     }
 
     /**
      * If point exists inside polygon.
      * 
      * @param point 
+     * @return true if number of intersections is odd number
      */
     has(point: Point) {
         let intersections = 0;

@@ -21,4 +21,8 @@ export class Segment {
     get j() {
         return this.b.y - this.a.y;
     }
+
+    get theta() {
+        return Math.atan((this.i / this.j));
+    }
 }
