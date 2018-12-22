@@ -23,6 +23,6 @@ export class Segment {
     }
 
     get theta() {
-        return Math.atan((this.i / this.j));
+        return Math.atan((this.j / this.i));
     }
 }
