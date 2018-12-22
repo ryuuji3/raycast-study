@@ -39,7 +39,10 @@ export class Polygon {
      * @param point
      * @param segment 
      */
-    protected pointHasIntersection({x, y}: Point, {a, b, i, j}: Segment) {
+    protected pointHasIntersection(point: Point, segment: Segment): boolean {
+        const { x, y } = point;
+        const { a, b, i, j} = segment;
+
         return ((y > a.y) && (x < b.y)) // y is between a and b
             && x < a.x + (i)*(y-a.y)/j // x falls within triangle created from a and b... I think?
     }
