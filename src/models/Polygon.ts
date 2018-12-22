@@ -35,19 +35,19 @@ export class Polygon {
      * Idea comes from: http://rosettacode.org/wiki/Ray-casting_algorithm#JavaScript
      * 
      * @param point
-     * @param segment 
+     * @param ab 
      * @return true if ray intersects from left
      */
-    protected pointHasIntersection(point: Point, segment: Segment): boolean {
-        const { x, y } = point;
-        const { a, b, theta } = segment;
-        
-        if (y < a.y || y > b.y || (x >= a.x && x >= b.x)) { // Outside range
+    protected pointHasIntersection(point: Point, ab: Segment): boolean {
+        const { a, theta: abx, b } = ab;
+        const { theta: pax } = new Segment(point, a);
+
+        if (point.y < a.y || point.y > b.y || (point.x >= a.x && point.x >= b.x)) {
             return false;
-        } else if (x < a.x && x < b.x) { // Left of both A and B
+        } else if (point.x < a.x && point.x < b.x) {
             return true;
-        } else { // create vector from AP and compare angles; if theta of AP is > than theta of AB then ray intersects segment
-            return Math.atan((y - a.y) / (x - a.x)) > theta;
+        } else {
+            return pax > abx;
         }
     }
 
