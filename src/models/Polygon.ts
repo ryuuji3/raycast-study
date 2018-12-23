@@ -12,6 +12,13 @@ export class Polygon {
         this.sides = this.createSegments(sorted);
     }
 
+    /**
+     * @param origin 
+     * @param a 
+     * @param b 
+     * 
+     * @returns sort number
+     */
     private compareClockwise(origin: Point, a: Point, b: Point) {
         const thetaA = Math.atan2(a.y - origin.y, a.x - origin.x);
         const thetaB = Math.atan2(b.y - origin.y, b.x - origin.x);
@@ -21,8 +28,21 @@ export class Polygon {
         else return 0;
     }
 
+    private findAveragePoint(points: Point[]): Point {
+        const add = (accumulator: number, current: number) => accumulator + current;
+        const x = points.map(point => point.x).reduce(add) / points.length;
+        const y = points.map(point => point.y).reduce(add) / points.length;
+
+        return new Point(x, y);
+    }
+
+    /**
+     * @param unsorted 
+     * 
+     * @returns sorted list of points
+     */
     protected sort(unsorted: Point[]) {
-        const origin = new Point(0,0);
+        const origin = this.findAveragePoint(unsorted);
 
         return unsorted.sort((a, b) => this.compareClockwise(origin, a, b));
     }
