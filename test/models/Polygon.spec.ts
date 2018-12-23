@@ -1,12 +1,12 @@
 import { Point, Polygon, Segment } from "../../src";
 
-test.skip("sort() should sort points clockwise", () => {
+test("sort() should sort points clockwise", () => {
     const points = [ new Point(-1, 5), new Point(0,0), new Point(1,5) ];
     const sorted = [ new Point(0,0), new Point(1,5), new Point(-1, 5) ];
     const polygon = new Polygon(points);
 
     expect(polygon.points.length).toBe(sorted.length);
-    expect(polygon.points).toBe(sorted);
+    expect(polygon.points).toStrictEqual(sorted);
 });
 
 test("should create sides (segments) from sorted points", () => {

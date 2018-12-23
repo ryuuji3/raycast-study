@@ -2,10 +2,29 @@ import { Point } from "./Point";
 import { Segment } from "./Segment";
 
 export class Polygon {
+    public points: Point[];
     public sides: Segment[];
 
-    constructor(public points: Point[]) {
-        this.sides = this.createSegments(points);
+    constructor(points: Point[]) {
+        const sorted = this.sort(points);
+
+        this.points = sorted;
+        this.sides = this.createSegments(sorted);
+    }
+
+    private compareClockwise(origin: Point, a: Point, b: Point) {
+        const thetaA = Math.atan2(a.y - origin.y, a.x - origin.x);
+        const thetaB = Math.atan2(b.y - origin.y, b.x - origin.x);
+
+        if (thetaA < thetaB) return -1;
+        else if (thetaB < thetaA) return 1;
+        else return 0;
+    }
+
+    protected sort(unsorted: Point[]) {
+        const origin = new Point(0,0);
+
+        return unsorted.sort((a, b) => this.compareClockwise(origin, a, b));
     }
 
     /**
