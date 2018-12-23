@@ -28,10 +28,14 @@ export class Polygon {
         else return 0;
     }
 
+    /**
+     * @param points 
+     */
     private findAveragePoint(points: Point[]): Point {
         const add = (accumulator: number, current: number) => accumulator + current;
-        const x = points.map(point => point.x).reduce(add) / points.length;
-        const y = points.map(point => point.y).reduce(add) / points.length;
+        const average = (points: Point[], mapFn: (point: Point) => number) => points.map(mapFn).reduce(add) / points.length;
+        const x = average(points, point => point.x);
+        const y = average(points, point => point.y);
 
         return new Point(x, y);
     }

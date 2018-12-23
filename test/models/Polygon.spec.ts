@@ -49,7 +49,8 @@ test("find() should return true if point is inside polygon", () => {
         new Point(-2, 4),
         new Point(-1, 5),
         new Point( 2, 2),
-        new Point( 1,-1)
+        new Point( 1,-1),
+        new Point( 3, 1)
     ]
     const polygon = new Polygon(shape);
 
