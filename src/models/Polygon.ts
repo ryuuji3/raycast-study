@@ -62,11 +62,14 @@ export class Polygon {
     protected createSegments(sorted: Point[]): Segment[] {
         let segments: Segment[] = [];
 
-        sorted.forEach((point, index, array) => {
-            const a = point;
+        sorted.forEach((a, index, array) => {
             const b = (index < array.length - 1) ? array[index + 1] : array[0];
             
-            segments.push(new Segment(a, b));
+            if (a.y <= b.y) {
+                segments.push(new Segment(a, b));
+            } else {
+                segments.push(new Segment(b, a));
+            }
         });
 
         return segments;
@@ -83,14 +86,15 @@ export class Polygon {
      */
     protected pointHasIntersection(point: Point, ab: Segment): boolean {
         const { a, theta: abx, b } = ab;
-        const { theta: pax } = new Segment(point, a);
+        const pa = new Segment(point, a);
+        const { theta: pax } = pa;
 
         if (point.y < a.y || point.y > b.y || (point.x >= Math.max(a.x, b.x))) {
             return false; // Outside bounds and can't possibly intersect
         } else if (point.x < Math.min(a.x, b.x)) {
             return true; // Gaurunteed to intersect
         } else {
-            return pax > abx; // compare angles to x-axis
+            return Math.abs(pax) > Math.abs(abx); // compare angles to x-axis
         }
     }
 

@@ -14,7 +14,7 @@ test("should create sides (segments) from sorted points", () => {
     const sides = [
         new Segment(points[0], points[1]),
         new Segment(points[1], points[2]),
-        new Segment(points[2], points[0])
+        new Segment(points[0], points[2])
     ]
     const polygon = new Polygon(points);
 

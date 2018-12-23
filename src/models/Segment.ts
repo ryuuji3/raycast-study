@@ -1,23 +1,7 @@
 import { Point } from "./Point";
 
 export class Segment {
-    public a: Point;
-    public b: Point;
-
-    constructor(p1: Point, p2: Point, ordered = true) {
-        if (ordered) {
-            if (p1.y <= p2.y) {
-                this.a = p1;
-                this.b = p2;
-            } else {
-                this.b = p1;
-                this.a = p2;
-            }
-        } else {
-            this.a = p1;
-            this.b = p2;
-        }
-    }
+    constructor(public a: Point, public b: Point) {}
 
     get i() {
         return this.b.x - this.a.x;
@@ -29,5 +13,9 @@ export class Segment {
 
     get theta() {
         return Math.atan((this.j / this.i));
+    }
+
+    public toString() {
+        return `a: ${this.a}, b: ${this.b}`;
     }
 }
