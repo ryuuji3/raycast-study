@@ -42,12 +42,12 @@ export class Polygon {
         const { a, theta: abx, b } = ab;
         const { theta: pax } = new Segment(point, a);
 
-        if (point.y < a.y || point.y > b.y || (point.x >= a.x && point.x >= b.x)) {
-            return false;
-        } else if (point.x < a.x && point.x < b.x) {
-            return true;
+        if (point.y < a.y || point.y > b.y || (point.x >= Math.max(a.x, b.x))) {
+            return false; // Outside bounds and can't possibly intersect
+        } else if (point.x < Math.min(a.x, b.x)) {
+            return true; // Gaurunteed to intersect
         } else {
-            return pax > abx;
+            return pax > abx; // compare angles to x-axis
         }
     }
 
