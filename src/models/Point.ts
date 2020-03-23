@@ -1,7 +1,11 @@
 export class Point {
-    constructor(public x: number, public y: number) {}
+  constructor(public x: number, public y: number) {}
 
-    toString() {
-        return `(${this.x},${this.y})`
-    }
+  toString() {
+    return `(${this.x},${this.y})`;
+  }
+
+  toSvg() {
+    return `${this.x},${this.y}`;
+  }
 }
