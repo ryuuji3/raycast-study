@@ -17,13 +17,19 @@ export default class App extends Vue {}
 <style>
 html,
 body {
-  margin: 0;
-  padding: 0;
   height: 100%;
 }
 
 body {
+  margin: 0;
+  padding: 0;
+
   color: white;
   background-color: #111;
 }
+
+  #app {
+    width: 100%;
+    height: 100%;
+  }
 </style>

@@ -1,6 +1,12 @@
 <template>
   <div class="container">
-    <interactive-polygon :polygon="polygon" />
+    <interactive-polygon
+      v-for="(shape, key) in shapes"
+      :key="key"
+      :polygon="shape.shape"
+      :x="shape.x"
+      :y="shape.y"
+    />
   </div>
 </template>
 
@@ -8,20 +14,23 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { State } from "vuex-class";
-import { Polygon } from "@/models";
+
 import InteractivePolygon from "@/components/InteractivePolygon.vue";
+import { RootStore } from "@/store";
 
 @Component({
   components: { InteractivePolygon }
 })
 export default class Surface extends Vue {
-  @State(state => state.polygon)
-  private polygon!: Polygon;
+  @State(state => state.shapes)
+  private shapes!: RootStore;
 }
 </script>
 
 <style scoped>
-  .container {
-    margin: 1em;
-  }
+.container {
+  width: inherit;
+  height: inherit;
+  position: absolute;
+}
 </style>

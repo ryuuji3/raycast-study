@@ -1,21 +1,22 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { Polygon } from "@/models";
+import shape, { ShapeState } from "./modules/Shape";
+import shapes from "./modules/Shapes";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
-    polygon: new Polygon([
-      [0, -200],
-      [50, -175],
-      [-50, -175],
-      [-50, -125],
-      [50, -125],
-      [0, -100]
-    ])
-  },
-  mutations: {},
-  actions: {},
-  modules: {}
+export interface RootStore {
+  shapes: {
+    [id: string]: ShapeState;
+  };
+}
+
+const store = new Vuex.Store({
+  modules: {
+    shapes
+  }
 });
+
+store.registerModule(["shapes", "1"], shape);
+
+export default store;
