@@ -1,5 +1,5 @@
 import { Module } from "vuex";
-import { Polygon } from "@/models";
+import { Coordinates, Polygon } from "@/models";
 import { RootStore } from "@/store";
 
 export interface ShapeState {
@@ -9,14 +9,19 @@ export interface ShapeState {
     x: number;
     y: number;
   };
+  dragOffset: null | {
+    x: number;
+    y: number;
+  };
 }
 
-export function Shape(
-  state: ShapeState
-): Module<ShapeState, RootStore> {
+export function Shape(state: ShapeState): Module<ShapeState, RootStore> {
   return {
     namespaced: true,
-    state,
+    state: {
+      ...state,
+      dragOffset: null
+    },
     getters: {
       x(state) {
         return state.coordinates.x;
@@ -35,20 +40,34 @@ export function Shape(
           x: p.x + getters.x,
           y: p.y + getters.y
         }));
+      },
+      dragging(state) {
+        return state.dragOffset != null;
       }
     },
     mutations: {
-      setX(state, value: number) {
-        state.coordinates.x = value;
+      setCoordinates(state, coordinates: Coordinates) {
+        state.coordinates = coordinates;
       },
-      setY(state, value: number) {
-        state.coordinates.y = value;
+      setDragOffset(state, dragOffset: Coordinates) {
+        state.dragOffset = dragOffset;
       }
     },
     actions: {
-      async setCoordinates({ commit }, { x, y }: { x: number; y: number }) {
-        commit("setX", x);
-        commit("setY", y);
+      startDrag({ commit, getters }, dragOffset: Coordinates) {
+        commit("setDragOffset", {
+          x: dragOffset.x - getters.x,
+          y: dragOffset.y - getters.y
+        });
+      },
+      moveShape({ commit, state }, newPosition: Coordinates) {
+        commit("setCoordinates", {
+          x: newPosition.x - (state.dragOffset?.x || 0),
+          y: newPosition.y - (state.dragOffset?.y || 0)
+        });
+      },
+      endDrag({ commit }) {
+        commit("setDragOffset", null);
       }
     }
   };
