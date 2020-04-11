@@ -1,42 +1,31 @@
 <template>
-  <svg
-    :viewBox="viewBox"
-    :width="width"
-    :height="height"
-    :style="style"
+ <PolygonSvg
+    :polygon="polygon"
+    :x="x"
+    :y="y"
+    :selected="selected"
     @mousedown="onDragStart"
-    @mouseup="onDragEnd"
-    ref="dragZone"
-  >
-    <rect
-      :x="polygon.leftMostX"
-      :y="polygon.topMostY - height"
-      :width="width"
-      :height="height"
-      :class="{ selected }"
-    />
-    <polygon :points="points" />
-  </svg>
+ />
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Ref, Emit } from "vue-property-decorator";
+import { Vue, Component, Prop, Emit } from "vue-property-decorator";
 
-import { Polygon } from "@/models";
+import { Polygon as PolygonModel } from "@/models";
+import PolygonSvg from "@/components/Polygon.vue";
 
-@Component({})
+@Component({
+  components: { PolygonSvg }
+})
 export default class InteractivePolygon extends Vue {
-  @Prop(Polygon)
-  readonly polygon!: Polygon;
+  @Prop(PolygonModel)
+  readonly polygon!: PolygonModel;
 
   @Prop(Number)
   readonly x!: number;
 
   @Prop(Number)
   readonly y!: number;
-
-  @Ref("dragZone")
-  readonly dragZone!: SVGElement;
 
   dragOffsetX: number | null = null;
   dragOffsetY: number | null = null;
@@ -48,29 +37,6 @@ export default class InteractivePolygon extends Vue {
   // TODO: Represents an edit state as well.
   get selected() {
     return this.dragging;
-  }
-
-  get style() {
-    return {
-      top: this.y,
-      left: this.x
-    };
-  }
-
-  get points() {
-    return this.polygon.toSvg();
-  }
-
-  get width() {
-    return this.polygon.width;
-  }
-
-  get height() {
-    return this.polygon.height;
-  }
-
-  get viewBox() {
-    return `0 0 ${this.width} ${this.height}`;
   }
 
   onDragStart(e: MouseEvent) {
@@ -96,30 +62,3 @@ export default class InteractivePolygon extends Vue {
   }
 }
 </script>
-
-<style scoped>
-svg {
-  position: relative;
-}
-
-rect {
-  stroke: green;
-}
-
-rect.selected {
-  stroke-dasharray: 10;
-  animation: selected 500ms linear infinite;
-}
-
-@keyframes selected {
-  to {
-    stroke-dashoffset: 20;
-  }
-}
-
-polygon {
-  fill: transparent;
-  stroke: green;
-  stroke-width: 1px;
-}
-</style>
