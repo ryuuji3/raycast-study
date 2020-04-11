@@ -15,6 +15,7 @@
 import { Vue, Component, Prop, Emit } from "vue-property-decorator";
 
 import RenderedPolygon from "@/components/RenderedPolygon.vue";
+import { Coordinates } from "@/models";
 
 @Component({
   components: { RenderedPolygon }
@@ -23,32 +24,23 @@ export default class InteractivePolygon extends Vue {
   @Prop(String)
   readonly id!: string;
 
-  dragOffsetX: number | null = null;
-  dragOffsetY: number | null = null;
+  @Prop(Array)
+  readonly points!: Array<Coordinates>;
 
-  get dragging() {
-    return this.dragOffsetX != null && this.dragOffsetY != null;
-  }
+  @Prop(Number)
+  readonly x!: number;
 
-  get points() {
-    return this.$store.getters[`shapes/${this.id}/points`];
-  }
+  @Prop(Number)
+  readonly y!: number;
 
-  get x() {
-    return this.$store.getters[`shapes/${this.id}/x`];
-  }
+  @Prop(Number)
+  readonly width!: number;
 
-  get y() {
-    return this.$store.getters[`shapes/${this.id}/y`];
-  }
+  @Prop(Number)
+  readonly height!: number;
 
-  get width() {
-    return this.$store.getters[`shapes/${this.id}/width`];
-  }
-
-  get height() {
-    return this.$store.getters[`shapes/${this.id}/height`];
-  }
+  @Prop(Boolean)
+  readonly dragging!: boolean;
 
   // TODO: Represents an edit state as well.
   get selected() {
