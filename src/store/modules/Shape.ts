@@ -6,7 +6,6 @@ export interface ShapeState {
   shape: Polygon;
   x: number;
   y: number;
-  dragging: boolean;
 }
 
 const Shape: Module<ShapeState, RootStore> = {
@@ -23,8 +22,7 @@ const Shape: Module<ShapeState, RootStore> = {
         [0, 75]
       ]),
       x: 25,
-      y: 25,
-      dragging: false
+      y: 25
     };
   },
 
@@ -38,7 +36,7 @@ const Shape: Module<ShapeState, RootStore> = {
   },
 
   actions: {
-    setCoordinates({ commit }, { x, y }: { x: number; y: number }) {
+    async setCoordinates({ commit }, { x, y }: { x: number; y: number }) {
       commit("setX", x);
       commit("setY", y);
     }
