@@ -4,12 +4,7 @@
       v-for="shape of shapes"
       :key="shape.id"
       :id="shape.id"
-      :points="$store.getters[`shapes/${shape.id}/points`]"
-      :x="$store.getters[`shapes/${shape.id}/x`]"
-      :y="$store.getters[`shapes/${shape.id}/y`]"
-      :width="$store.getters[`shapes/${shape.id}/width`]"
-      :height="$store.getters[`shapes/${shape.id}/height`]"
-      :dragging="$store.getters[`shapes/${shape.id}/dragging`]"
+      v-bind="getShape(shape.id)"
       @drag="coordinates => handleDrag(shape.id, coordinates)"
       @dragstart="coordinates => handleDragStart(shape.id, coordinates)"
       @dragend="() => handleDragEnd(shape.id)"
@@ -46,6 +41,17 @@ export default class Surface extends Vue {
 
   handleDragEnd(id: number) {
     return this.$store.dispatch(`shapes/${id}/endDrag`);
+  }
+
+  getShape(id: string) {
+    return {
+      points: this.$store.getters[`shapes/${id}/points`],
+      x: this.$store.getters[`shapes/${id}/x`],
+      y: this.$store.getters[`shapes/${id}/y`],
+      width: this.$store.getters[`shapes/${id}/width`],
+      height: this.$store.getters[`shapes/${id}/height`],
+      dragging: this.$store.getters[`shapes/${id}/dragging`]
+    };
   }
 }
 </script>
