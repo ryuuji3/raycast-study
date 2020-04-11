@@ -1,4 +1,4 @@
-export class Point {
+export class Point implements Coordinates {
   constructor(public x: number, public y: number) {}
 
   toString() {
@@ -8,4 +8,9 @@ export class Point {
   toSvg() {
     return `${this.x},${this.y}`;
   }
+}
+
+export interface Coordinates {
+  x: number;
+  y: number;
 }

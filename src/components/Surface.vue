@@ -1,19 +1,23 @@
 <template>
-  <div class="container">
+  <svg
+    ref="surface"
+    class="container"
+  >
     <interactive-polygon
-      v-for="(shape, index) in shapes"
-      :key="index"
+      v-for="shape of shapes"
+      :key="shape.id"
+      :id="shape.id"
       :polygon="shape.shape"
       :x="shape.x"
       :y="shape.y"
-      @drag="coordinates => setCoordinates({ index, ...coordinates})"
+      @drag="coordinates => setCoordinates({ id: shape.id, ...coordinates})"
     />
-  </div>
+  </svg>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import Component from "vue-class-component";
+import { Component, Ref } from "vue-property-decorator";
 import { State, Action } from "vuex-class";
 
 import InteractivePolygon from "@/components/InteractivePolygon.vue";
@@ -23,16 +27,19 @@ import { RootStore } from "@/store";
   components: { InteractivePolygon }
 })
 export default class Surface extends Vue {
+  @Ref("surface")
+  readonly surface!: HTMLElement;
+
   @State(state => state.shapes)
   private shapes!: RootStore;
 
   @Action("shapes/setCoordinates")
   public setCoordinates!: ({
-    index,
+    id,
     x,
     y
   }: {
-    index: number;
+    id: string;
     x: number;
     y: number;
   }) => Promise<void>;
@@ -43,6 +50,5 @@ export default class Surface extends Vue {
 .container {
   width: inherit;
   height: inherit;
-  position: absolute;
 }
 </style>

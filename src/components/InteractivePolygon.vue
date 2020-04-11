@@ -1,9 +1,10 @@
 <template>
- <PolygonSvg
+ <rendered-polygon
     :polygon="polygon"
     :x="x"
     :y="y"
     :selected="selected"
+    :data-shapeid="id"
     @mousedown="onDragStart"
  />
 </template>
@@ -12,14 +13,17 @@
 import { Vue, Component, Prop, Emit } from "vue-property-decorator";
 
 import { Polygon as PolygonModel } from "@/models";
-import PolygonSvg from "@/components/Polygon.vue";
+import RenderedPolygon from "@/components/RenderedPolygon.vue";
 
 @Component({
-  components: { PolygonSvg }
+  components: { RenderedPolygon }
 })
 export default class InteractivePolygon extends Vue {
   @Prop(PolygonModel)
   readonly polygon!: PolygonModel;
+
+ @Prop(String)
+ readonly id!: string;
 
   @Prop(Number)
   readonly x!: number;

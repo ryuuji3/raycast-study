@@ -1,11 +1,8 @@
 <template>
-  <svg
-    :viewBox="viewBox"
-    :width="width"
-    :height="height"
-    :style="style"
+  <g
     @mousedown="e => $emit('mousedown', e)"
     :class="{ selected }"
+    :transform="coordinates"
   >
     <rect
       :x="polygon.leftMostX"
@@ -14,7 +11,7 @@
       :height="height"
     />
     <polygon :points="points" />
-  </svg>
+  </g>
 </template>
 
 <script lang="ts">
@@ -36,11 +33,8 @@ export default class PolygonSvg extends Vue {
   @Prop(Boolean)
   readonly selected!: boolean;
 
-  get style() {
-    return {
-      top: this.y,
-      left: this.x
-    };
+  get coordinates() {
+    return `translate(${this.x},${this.y})`;
   }
 
   get points() {
@@ -54,32 +48,24 @@ export default class PolygonSvg extends Vue {
   get height() {
     return this.polygon.height;
   }
-
-  get viewBox() {
-    return `0 0 ${this.width} ${this.height}`;
-  }
 }
 </script>
 
 <style scoped>
-svg {
-  position: relative;
-}
-
 rect {
   stroke: green;
 }
 
-svg.selected > rect {
+g.selected > rect {
   stroke-dasharray: 10;
   animation: selected 500ms linear infinite;
 }
 
-svg:hover {
+g:hover {
   cursor: grab;
 }
 
-svg.selected {
+g.selected {
   cursor: grabbing;
 }
 
