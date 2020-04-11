@@ -1,35 +1,27 @@
 <template>
- <rendered-polygon
-    :polygon="polygon"
+  <rendered-polygon
+    :points="points"
     :x="x"
     :y="y"
+    :width="width"
+    :height="height"
     :selected="selected"
     :data-shapeid="id"
     @mousedown="onDragStart"
- />
+  />
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop, Emit } from "vue-property-decorator";
 
-import { Polygon as PolygonModel } from "@/models";
 import RenderedPolygon from "@/components/RenderedPolygon.vue";
 
 @Component({
   components: { RenderedPolygon }
 })
 export default class InteractivePolygon extends Vue {
-  @Prop(PolygonModel)
-  readonly polygon!: PolygonModel;
-
- @Prop(String)
- readonly id!: string;
-
-  @Prop(Number)
-  readonly x!: number;
-
-  @Prop(Number)
-  readonly y!: number;
+  @Prop(String)
+  readonly id!: string;
 
   dragOffsetX: number | null = null;
   dragOffsetY: number | null = null;
@@ -38,14 +30,34 @@ export default class InteractivePolygon extends Vue {
     return this.dragOffsetX != null && this.dragOffsetY != null;
   }
 
+  get points() {
+    return this.$store.getters[`shapes/${this.id}/points`];
+  }
+
+  get x() {
+    return this.$store.getters[`shapes/${this.id}/x`];
+  }
+
+  get y() {
+    return this.$store.getters[`shapes/${this.id}/y`];
+  }
+
+  get width() {
+    return this.$store.getters[`shapes/${this.id}/width`];
+  }
+
+  get height() {
+    return this.$store.getters[`shapes/${this.id}/height`];
+  }
+
   // TODO: Represents an edit state as well.
   get selected() {
     return this.dragging;
   }
 
   onDragStart(e: MouseEvent) {
-    this.dragOffsetX = e.clientX - this.x;
-    this.dragOffsetY = e.clientY - this.y;
+    this.dragOffsetX = e.offsetX - this.x;
+    this.dragOffsetY = e.offsetY - this.y;
     document.addEventListener("mouseup", this.onDragEnd);
     document.addEventListener("mousemove", this.onMouseMove);
   }
@@ -60,8 +72,8 @@ export default class InteractivePolygon extends Vue {
   @Emit("drag")
   onMouseMove(e: MouseEvent) {
     return {
-      x: e.clientX - (this.dragOffsetX || 0),
-      y: e.clientY - (this.dragOffsetY || 0)
+      x: e.offsetX - (this.dragOffsetX || 0),
+      y: e.offsetY - (this.dragOffsetY || 0)
     };
   }
 }

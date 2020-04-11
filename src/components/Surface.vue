@@ -7,10 +7,7 @@
       v-for="shape of shapes"
       :key="shape.id"
       :id="shape.id"
-      :polygon="shape.shape"
-      :x="shape.x"
-      :y="shape.y"
-      @drag="coordinates => setCoordinates({ id: shape.id, ...coordinates})"
+      @drag="coordinates => handleDrag(shape.id, coordinates)"
     />
   </svg>
 </template>
@@ -18,10 +15,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Ref } from "vue-property-decorator";
-import { State, Action } from "vuex-class";
+import { State } from "vuex-class";
 
 import InteractivePolygon from "@/components/InteractivePolygon.vue";
 import { RootStore } from "@/store";
+import { Coordinates } from "@/models";
 
 @Component({
   components: { InteractivePolygon }
@@ -33,16 +31,9 @@ export default class Surface extends Vue {
   @State(state => state.shapes)
   private shapes!: RootStore;
 
-  @Action("shapes/setCoordinates")
-  public setCoordinates!: ({
-    id,
-    x,
-    y
-  }: {
-    id: string;
-    x: number;
-    y: number;
-  }) => Promise<void>;
+  handleDrag(id: number, coordinates: Coordinates) {
+    return this.$store.dispatch(`shapes/${id}/setCoordinates`, coordinates);
+  }
 }
 </script>
 

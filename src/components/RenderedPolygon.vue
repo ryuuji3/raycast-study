@@ -2,27 +2,26 @@
   <g
     @mousedown="e => $emit('mousedown', e)"
     :class="{ selected }"
-    :transform="coordinates"
   >
     <rect
-      :x="polygon.leftMostX"
-      :y="polygon.topMostY - height"
+      :x="x"
+      :y="y"
       :width="width"
       :height="height"
     />
-    <polygon :points="points" />
+    <polygon :points="pointsToSvgPoints" />
   </g>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 
-import { Polygon as PolygonModel } from "@/models";
+import { Coordinates } from "@/models";
 
 @Component({})
 export default class PolygonSvg extends Vue {
-  @Prop(PolygonModel)
-  readonly polygon!: PolygonModel;
+  @Prop(Array)
+  readonly points!: Array<Coordinates>;
 
   @Prop(Number)
   readonly x!: number;
@@ -30,23 +29,17 @@ export default class PolygonSvg extends Vue {
   @Prop(Number)
   readonly y!: number;
 
+  @Prop(Number)
+  readonly width!: number;
+
+  @Prop(Number)
+  readonly height!: number;
+
   @Prop(Boolean)
   readonly selected!: boolean;
 
-  get coordinates() {
-    return `translate(${this.x},${this.y})`;
-  }
-
-  get points() {
-    return this.polygon.toSvg();
-  }
-
-  get width() {
-    return this.polygon.width;
-  }
-
-  get height() {
-    return this.polygon.height;
+  get pointsToSvgPoints() {
+    return this.points.reduce((points, point) => `${points} ${point.x},${point.y}`, "")
   }
 }
 </script>

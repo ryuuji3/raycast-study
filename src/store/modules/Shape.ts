@@ -5,8 +5,10 @@ import { RootStore } from "@/store";
 export interface ShapeState {
   id: string;
   shape: Polygon;
-  x: number;
-  y: number;
+  coordinates: {
+    x: number;
+    y: number;
+  };
 }
 
 export function Shape(
@@ -15,15 +17,34 @@ export function Shape(
   return {
     namespaced: true,
     state,
-    mutations: {
-      setX(state, value: number) {
-        state.x = value;
+    getters: {
+      x(state) {
+        return state.coordinates.x;
       },
-      setY(state, value: number) {
-        state.y = value;
+      y(state) {
+        return state.coordinates.y;
+      },
+      width(state) {
+        return state.shape.width;
+      },
+      height(state) {
+        return state.shape.height;
+      },
+      points(state, getters) {
+        return state.shape.points.map(p => ({
+          x: p.x + getters.x,
+          y: p.y + getters.y
+        }));
       }
     },
-
+    mutations: {
+      setX(state, value: number) {
+        state.coordinates.x = value;
+      },
+      setY(state, value: number) {
+        state.coordinates.y = value;
+      }
+    },
     actions: {
       async setCoordinates({ commit }, { x, y }: { x: number; y: number }) {
         commit("setX", x);

@@ -28,8 +28,10 @@ store.dispatch("shapes/addShape", {
     [100, 125],
     [0, 75]
   ]),
-  x: 25,
-  y: 25
+  coordinates: {
+    x: 25,
+    y: 25
+  }
 });
 
 export default store;
