@@ -47,7 +47,7 @@ export default class InteractivePolygon extends Vue {
     return this.dragging;
   }
 
-  @Emit("dragstart")
+  @Emit("mousedown")
   onDragStart(e: MouseEvent) {
     document.addEventListener("mouseup", this.onDragEnd);
     document.addEventListener("mousemove", this.onMouseMove);
@@ -58,13 +58,13 @@ export default class InteractivePolygon extends Vue {
     };
   }
 
-  @Emit("dragend")
+  @Emit("mouseup")
   onDragEnd() {
     document.removeEventListener("mousemove", this.onMouseMove);
     document.removeEventListener("mouseup", this.onDragEnd);
   }
 
-  @Emit("drag")
+  @Emit("mousemove")
   onMouseMove(e: MouseEvent) {
     return {
       x: e.offsetX,

@@ -3,11 +3,10 @@
     <interactive-polygon
       v-for="shape of shapes"
       :key="shape.id"
-      :id="shape.id"
       v-bind="getShape(shape.id)"
-      @drag="coordinates => handleDrag(shape.id, coordinates)"
-      @dragstart="coordinates => handleDragStart(shape.id, coordinates)"
-      @dragend="() => handleDragEnd(shape.id)"
+      @mousedown="coordinates => handleMouseDown(coordinates, shape.id)"
+      @mousemove="handleMouseMove"
+      @mouseup="handleMouseUp"
     />
   </svg>
 </template>
@@ -31,20 +30,28 @@ export default class Surface extends Vue {
   @State(state => state.shapes)
   private shapes!: RootStore;
 
-  handleDrag(id: number, coordinates: Coordinates) {
-    return this.$store.dispatch(`shapes/${id}/moveShape`, coordinates);
+  handleMouseDown(coordinates: Coordinates, id?: string) {
+    return this.$store.dispatch(`mode/handleMouseDown`, {
+      coordinates,
+      selected: id
+    });
   }
 
-  handleDragStart(id: number, coordinates: Coordinates) {
-    return this.$store.dispatch(`shapes/${id}/startDrag`, coordinates);
+  handleMouseMove(coordinates: Coordinates) {
+    return this.$store.dispatch(`mode/handleMouseMove`, {
+      coordinates
+    });
   }
 
-  handleDragEnd(id: number) {
-    return this.$store.dispatch(`shapes/${id}/endDrag`);
+  handleMouseUp(coordinates: Coordinates) {
+    return this.$store.dispatch(`mode/handleMouseUp`, {
+      coordinates
+    });
   }
 
   getShape(id: string) {
     return {
+      id,
       points: this.$store.getters[`shapes/${id}/points`],
       x: this.$store.getters[`shapes/${id}/x`],
       y: this.$store.getters[`shapes/${id}/y`],
