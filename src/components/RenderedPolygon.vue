@@ -1,6 +1,13 @@
 <template>
   <g @mousedown="e => $emit('mousedown', e)" :class="{ selected }">
-    <rect v-if="selected" :x="x" :y="y" :width="width" :height="height" />
+    <selection-rectangle
+      v-if="selected"
+      :x="x"
+      :y="y"
+      :width="width"
+      :height="height"
+      :selected="selected"
+    />
     <polygon :points="pointsToSvgPoints" />
   </g>
 </template>
@@ -9,8 +16,11 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 import { Coordinates } from "@/models";
+import SelectionRectangle from "@/components/SelectionRectangle.vue";
 
-@Component({})
+@Component({
+  components: { SelectionRectangle }
+})
 export default class PolygonSvg extends Vue {
   @Prop(Array)
   readonly points!: Array<Coordinates>;
@@ -44,27 +54,12 @@ g {
   z-index: 10;
 }
 
-rect {
-  stroke: green;
-}
-
-g.selected > rect {
-  stroke-dasharray: 10;
-  animation: selected 500ms linear infinite;
-}
-
 g:hover {
   cursor: grab;
 }
 
 g.selected {
   cursor: grabbing;
-}
-
-@keyframes selected {
-  to {
-    stroke-dashoffset: 20;
-  }
 }
 
 polygon {

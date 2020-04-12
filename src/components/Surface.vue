@@ -14,20 +14,29 @@
       @mousemove="handleMouseMove"
       @mouseup="handleMouseUp"
     />
+    <selection-rectangle
+      v-if="selectionWidth"
+      :x="selectionX"
+      :y="selectionY"
+      :width="selectionWidth"
+      :height="selectionHeight"
+      selected
+    />
   </svg>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Ref } from "vue-property-decorator";
-import { State } from "vuex-class";
+import { Getter, State } from "vuex-class";
 
 import InteractivePolygon from "@/components/InteractivePolygon.vue";
 import { RootStore } from "@/store";
 import { Coordinates } from "@/models";
+import SelectionRectangle from "@/components/SelectionRectangle.vue";
 
 @Component({
-  components: { InteractivePolygon }
+  components: { SelectionRectangle, InteractivePolygon }
 })
 export default class Surface extends Vue {
   @Ref("surface")
@@ -35,6 +44,18 @@ export default class Surface extends Vue {
 
   @State(state => state.shapes)
   private shapes!: RootStore;
+
+  @Getter("mode/selection/xStart")
+  readonly selectionX!: number;
+
+  @Getter("mode/selection/yStart")
+  readonly selectionY!: number;
+
+  @Getter("mode/selection/width")
+  readonly selectionWidth!: number;
+
+  @Getter("mode/selection/height")
+  readonly selectionHeight!: number;
 
   handleMouseDown(coordinates: Coordinates, id?: string) {
     return this.$store.dispatch(`mode/handleMouseDown`, {

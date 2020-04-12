@@ -2,6 +2,7 @@ import { Module } from "vuex";
 import { Coordinates } from "@/models";
 import { RootStore } from "@/store";
 import Selection, { SelectState } from "@/store/modules/Mode/Selection";
+import Rectangle from "@/models/Rectangle";
 
 export interface MoveState {
   selected: Array<string>;
@@ -41,6 +42,10 @@ const Move: Module<MoveState, RootStore> = {
         x: coordinates.x - rootGetters[`shapes/${state.selected[0]}/x`],
         y: coordinates.y - rootGetters[`shapes/${state.selected[0]}/y`]
       });
+
+      if (!state.selected.length) {
+        commit("selection/setStartCoordinates", coordinates);
+      }
     },
     handleMouseMove(
       { commit, state },
@@ -56,11 +61,11 @@ const Move: Module<MoveState, RootStore> = {
           commit(`shapes/${id}/setCoordinates`, newCoordinates, { root: true });
         });
       } else if (state.dragOffset) {
-        commit("selection/setStartCoordinates", newCoordinates);
+        commit("selection/setEndCoordinates", newCoordinates);
       }
     },
     handleMouseUp(
-      { state, commit },
+      { state, commit, dispatch },
       { coordinates }: { coordinates: Coordinates }
     ) {
       // Ignore second event
@@ -71,10 +76,21 @@ const Move: Module<MoveState, RootStore> = {
       commit("setDragOffset", null);
 
       if (!state.selected.length) {
-        commit("selection/setEndCoordinates", coordinates);
+        return dispatch("selection/finishSelection", coordinates);
       } else {
         commit("setSelected", []);
       }
+    },
+    select({ state, commit, rootState, rootGetters }, rectangle: Rectangle) {
+      Object.values(rootState.shapes).forEach(shape => {
+        for (const point of rootGetters[`shapes/${shape.id}/points`]) {
+          if (rectangle.has(point)) {
+            commit("setSelected", [...state.selected, shape.id]);
+
+            break;
+          }
+        }
+      });
     }
   },
   modules: {
