@@ -33,6 +33,11 @@ export function Shape(state: ShapeState): Module<ShapeState, RootStore> {
           x: p.x + getters.x,
           y: p.y + getters.y
         }));
+      },
+      selected(state, getters, rootStore) {
+        const selected = rootStore.mode?.selected || [];
+
+        return selected.includes(state.id);
       }
     },
     mutations: {

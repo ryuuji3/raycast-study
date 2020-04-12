@@ -1,6 +1,7 @@
 import { Module } from "vuex";
 import { Coordinates } from "@/models";
 import { RootStore } from "@/store";
+import Selection, { SelectState } from "@/store/modules/Mode/Selection";
 
 export interface MoveState {
   selected: Array<string>;
@@ -23,12 +24,18 @@ const Move: Module<MoveState, RootStore> = {
       state.dragOffset = dragOffset;
     },
     setSelected(state, selected) {
-      state.selected = Array.isArray(selected) ? selected : [selected];
+      state.selected = Array.isArray(selected)
+        ? selected
+        : selected
+        ? [selected]
+        : [];
     }
   },
   actions: {
     handleMouseDown({ state, commit, rootGetters }, { coordinates, selected }) {
-      commit("setSelected", selected);
+      if (!state.selected.length) {
+        commit("setSelected", selected);
+      }
 
       commit("setDragOffset", {
         x: coordinates.x - rootGetters[`shapes/${state.selected[0]}/x`],
@@ -39,20 +46,39 @@ const Move: Module<MoveState, RootStore> = {
       { commit, state },
       { coordinates }: { coordinates: Coordinates }
     ) {
-      state.selected.forEach(id => {
-        commit(
-          `shapes/${id}/setCoordinates`,
-          {
-            x: coordinates.x - (state.dragOffset?.x || 0),
-            y: coordinates.y - (state.dragOffset?.y || 0)
-          },
-          { root: true }
-        );
-      });
+      const newCoordinates = {
+        x: coordinates.x - (state.dragOffset?.x || 0),
+        y: coordinates.y - (state.dragOffset?.y || 0)
+      };
+
+      if (state.selected.length) {
+        state.selected.forEach(id => {
+          commit(`shapes/${id}/setCoordinates`, newCoordinates, { root: true });
+        });
+      } else if (state.dragOffset) {
+        commit("selection/setStartCoordinates", newCoordinates);
+      }
     },
-    handleMouseUp({ commit }) {
+    handleMouseUp(
+      { state, commit },
+      { coordinates }: { coordinates: Coordinates }
+    ) {
+      // Ignore second event
+      if (!state.dragOffset) {
+        return;
+      }
+
       commit("setDragOffset", null);
+
+      if (!state.selected.length) {
+        commit("selection/setEndCoordinates", coordinates);
+      } else {
+        commit("setSelected", []);
+      }
     }
+  },
+  modules: {
+    selection: Selection
   }
 };
 

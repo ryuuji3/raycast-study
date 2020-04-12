@@ -1,5 +1,11 @@
 <template>
-  <svg ref="surface" class="container">
+  <svg
+    ref="surface"
+    class="container"
+    @mousedown="handleMouseDown"
+    @mousemove="handleMouseMove"
+    @mouseup="handleMouseUp"
+  >
     <interactive-polygon
       v-for="shape of shapes"
       :key="shape.id"
@@ -57,6 +63,7 @@ export default class Surface extends Vue {
       y: this.$store.getters[`shapes/${id}/y`],
       width: this.$store.getters[`shapes/${id}/width`],
       height: this.$store.getters[`shapes/${id}/height`],
+      selected: this.$store.getters[`shapes/${id}/selected`],
       dragging: this.$store.getters[`shapes/${id}/dragging`]
     };
   }
@@ -67,5 +74,7 @@ export default class Surface extends Vue {
 .container {
   width: inherit;
   height: inherit;
+
+  z-index: 0;
 }
 </style>

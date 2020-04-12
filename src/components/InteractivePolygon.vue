@@ -40,12 +40,7 @@ export default class InteractivePolygon extends Vue {
   readonly height!: number;
 
   @Prop(Boolean)
-  readonly dragging!: boolean;
-
-  // TODO: Represents an edit state as well.
-  get selected() {
-    return this.dragging;
-  }
+  readonly selected!: boolean;
 
   @Emit("mousedown")
   onDragStart(e: MouseEvent) {

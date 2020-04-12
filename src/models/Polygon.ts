@@ -5,11 +5,12 @@ export class Polygon {
   public points: Point[];
   public sides: Segment[];
 
-  constructor(points: IPoint[]) {
-    const sorted = this.sort(points.map(([x, y]) => new Point(x, y)));
+  constructor(_points: IPoint[], sorted = false) {
+    const points = _points.map(([x, y]) => new Point(x, y));
+    const sortedPoints = sorted ? points : this.sort(points);
 
-    this.points = sorted;
-    this.sides = this.createSegments(sorted);
+    this.points = sortedPoints;
+    this.sides = this.createSegments(sortedPoints);
   }
 
   /**

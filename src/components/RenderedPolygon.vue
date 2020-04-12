@@ -1,14 +1,6 @@
 <template>
-  <g
-    @mousedown="e => $emit('mousedown', e)"
-    :class="{ selected }"
-  >
-    <rect
-      :x="x"
-      :y="y"
-      :width="width"
-      :height="height"
-    />
+  <g @mousedown="e => $emit('mousedown', e)" :class="{ selected }">
+    <rect v-if="selected" :x="x" :y="y" :width="width" :height="height" />
     <polygon :points="pointsToSvgPoints" />
   </g>
 </template>
@@ -39,12 +31,19 @@ export default class PolygonSvg extends Vue {
   readonly selected!: boolean;
 
   get pointsToSvgPoints() {
-    return this.points.reduce((points, point) => `${points} ${point.x},${point.y}`, "")
+    return this.points.reduce(
+      (points, point) => `${points} ${point.x},${point.y}`,
+      ""
+    );
   }
 }
 </script>
 
 <style scoped>
+g {
+  z-index: 10;
+}
+
 rect {
   stroke: green;
 }
